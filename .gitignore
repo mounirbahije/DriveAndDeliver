@@ -3,13 +3,15 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+mvnw
+mvnw.cmd
+.mvn/*
 ### STS ###
-.apt_gpath
-      .factorypath
-      .project
-      .settingsenerated
-.class
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
 .springBeans
 .sts4-cache
 

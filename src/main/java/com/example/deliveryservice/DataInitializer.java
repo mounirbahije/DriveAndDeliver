@@ -1,13 +1,11 @@
 package com.example.deliveryservice;
 
-import com.example.deliveryservice.model.*;
-import com.example.deliveryservice.repository.*;
+import com.example.deliveryservice.model.DeliveryMethod;
+import com.example.deliveryservice.repository.DeliveryMethodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalTime;
 
 @Configuration
 public class DataInitializer {

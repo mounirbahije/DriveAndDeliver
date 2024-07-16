@@ -4,9 +4,13 @@ import com.example.deliveryservice.dto.DeliveryMethodDTO;
 import com.example.deliveryservice.service.DeliveryMethodService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/delivery-methods")
@@ -21,26 +25,41 @@ public class DeliveryMethodController {
 
     @GetMapping
     @Operation(summary = "Get all delivery methods", description = "Retrieve a list of all delivery methods", tags = { "delivery method" })
-    public List<DeliveryMethodDTO> getAllDeliveryMethods() {
-        return deliveryMethodService.getAllDeliveryMethods();
+    public CollectionModel<EntityModel<DeliveryMethodDTO>> getAllDeliveryMethods() {
+        List<EntityModel<DeliveryMethodDTO>> deliveryMethods = deliveryMethodService.getAllDeliveryMethods().stream()
+                .map(deliveryMethod -> EntityModel.of(deliveryMethod,
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getDeliveryMethodById(deliveryMethod.getId())).withSelfRel(),
+                        WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getAllDeliveryMethods()).withRel("deliveryMethods")))
+                .collect(Collectors.toList());
+        return CollectionModel.of(deliveryMethods,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getAllDeliveryMethods()).withSelfRel());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get delivery method by ID", description = "Retrieve a single delivery method by its ID", tags = { "delivery method" })
-    public DeliveryMethodDTO getDeliveryMethodById(@PathVariable Long id) {
-        return deliveryMethodService.getDeliveryMethodById(id);
+    public EntityModel<DeliveryMethodDTO> getDeliveryMethodById(@PathVariable Long id) {
+        DeliveryMethodDTO deliveryMethod = deliveryMethodService.getDeliveryMethodById(id);
+        return EntityModel.of(deliveryMethod,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getDeliveryMethodById(id)).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getAllDeliveryMethods()).withRel("deliveryMethods"));
     }
 
     @PostMapping
     @Operation(summary = "Create a new delivery method", description = "Create a new delivery method", tags = { "delivery method" })
-    public DeliveryMethodDTO createDeliveryMethod(@RequestBody DeliveryMethodDTO deliveryMethodDTO) {
-        return deliveryMethodService.createDeliveryMethod(deliveryMethodDTO);
+    public EntityModel<DeliveryMethodDTO> createDeliveryMethod(@RequestBody DeliveryMethodDTO deliveryMethodDTO) {
+        DeliveryMethodDTO createdDeliveryMethod = deliveryMethodService.createDeliveryMethod(deliveryMethodDTO);
+        return EntityModel.of(createdDeliveryMethod,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getDeliveryMethodById(createdDeliveryMethod.getId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getAllDeliveryMethods()).withRel("deliveryMethods"));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing delivery method", description = "Update an existing delivery method", tags = { "delivery method" })
-    public DeliveryMethodDTO updateDeliveryMethod(@PathVariable Long id, @RequestBody DeliveryMethodDTO deliveryMethodDTO) {
-        return deliveryMethodService.updateDeliveryMethod(id, deliveryMethodDTO);
+    public EntityModel<DeliveryMethodDTO> updateDeliveryMethod(@PathVariable Long id, @RequestBody DeliveryMethodDTO deliveryMethodDTO) {
+        DeliveryMethodDTO updatedDeliveryMethod = deliveryMethodService.updateDeliveryMethod(id, deliveryMethodDTO);
+        return EntityModel.of(updatedDeliveryMethod,
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getDeliveryMethodById(updatedDeliveryMethod.getId())).withSelfRel(),
+                WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(DeliveryMethodController.class).getAllDeliveryMethods()).withRel("deliveryMethods"));
     }
 
     @DeleteMapping("/{id}")
