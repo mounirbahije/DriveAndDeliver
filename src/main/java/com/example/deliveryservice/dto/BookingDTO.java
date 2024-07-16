@@ -3,7 +3,7 @@ package com.example.deliveryservice.dto;
 public class BookingDTO {
 
     private Long id;
-    private String customerName;
+    private Long userId;
     private Long deliveryMethodId;
     private Long timeSlotId;
 
@@ -17,12 +17,12 @@ public class BookingDTO {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Long getDeliveryMethodId() {

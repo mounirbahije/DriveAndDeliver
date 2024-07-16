@@ -1,66 +1,25 @@
-# Implementing HATEOAS in Spring Boot REST API
+## JWT Authentication Endpoints
 
-In this branch, i have implemented HATEOAS (Hypermedia as the Engine of Application State) in our Spring Boot REST API. HATEOAS is a constraint of the REST application architecture that keeps the RESTful interface dynamic and discoverable. It allows clients to navigate the API by providing hypermedia links within the responses.
+In this Spring Boot project, JWT authentication is handled through two primary endpoints:
 
-## Launching the Project
+### 1. Sign-In Endpoint
+- **Endpoint**: `/api/auth/signin`
+- **Method**: POST
+- **Description**: Users send their username and password to this endpoint. If the credentials are correct, the server issues a JWT (JSON Web Token) which the user needs for accessing protected routes.
 
-This guide assumes you have Java and Maven installed and configured on your system.
+### 2. Sign-Up Endpoint
+- **Endpoint**: `/api/auth/signup`
+- **Method**: POST
+- **Description**: Allows new users to register by providing a username and password. The server stores the user's information and returns a confirmation message.
 
-### Step 1: Open Your Command Line Interface
+## Function of JWT in This Project
 
-Navigate to the root directory of your project where the `pom.xml` file is located. This file contains all Maven project configurations.
+JWT (JSON Web Token) serves as a compact and secure way to handle user authentication and authorization:
 
-### Step 2: Run the Application
+- **Authentication**: During sign-in, if the user's credentials are validated, a JWT is generated and returned to the user. This token includes encoded details like the user's identity (username), issue date, and an expiry time.
 
-Execute the following command in your command line interface:
+- **Authorization**: For subsequent requests to protected endpoints, the user must send this token as part of the request headers. The server validates the token using the `JwtAuthenticationFilter` to ensure it's still valid and corresponds to a valid user.
 
-```bash
-mvn spring-boot:run
-```
-This command compiles your project and starts the Spring Boot application. Maven handles the dependencies, and Spring Boot launches the application on the default port (usually 8080).
+- **Security**: JWT helps secure the application by ensuring that user credentials are not sent over the network after the initial authentication. This reduces the risk of credentials being intercepted during transmission.
 
-### Step 3: Access the Application
-
-Once the application is running, access it via any web browser or API client at: http://localhost:8080
-
-you can interact with your API using the Swagger UI at: http://localhost:8080/swagger-ui/index.html
-
-This page displays the API documentation and provides an interface for testing the API endpoints.
-
-
-
-## Example Response
-
-Here is an example response for fetching all delivery methods:
-
-```json
-{
-  "_embedded": {
-    "deliveryMethodDTOList": [
-      {
-        "id": 1,
-        "name": "DRIVE",
-        "_links": {
-          "self": {
-            "href": "http://localhost:8080/api/delivery-methods/1"
-          },
-          "deliveryMethods": {
-            "href": "http://localhost:8080/api/delivery-methods"
-          }
-        }
-      }
-    ]
-  },
-  "_links": {
-    "self": {
-      "href": "http://localhost:8080/api/delivery-methods"
-    }
-  }
-}
-```
-In this response, each delivery method includes links to its own resource (self) and the collection of delivery methods (deliveryMethods).
-
-## Benefits of HATEOAS
-* **Discoverability**: Clients can discover and navigate the API dynamically without hardcoding the endpoints.
-* **Decoupling**: Reduces the dependency between client and server, making it easier to evolve the API.
-* **Hypermedia Navigation**: Provides a way to guide clients through the available actions and resources.
+Using JWT enhances the security and usability of the application by enabling stateless authentication and providing a mechanism for users to interact with the app securely after logging in.

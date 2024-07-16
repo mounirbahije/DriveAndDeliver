@@ -9,7 +9,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerName;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "delivery_method_id", nullable = false)
@@ -29,12 +31,12 @@ public class Booking {
         this.id = id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public DeliveryMethod getDeliveryMethod() {
